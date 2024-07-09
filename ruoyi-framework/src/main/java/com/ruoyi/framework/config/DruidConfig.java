@@ -40,6 +40,13 @@ public class DruidConfig
         return druidProperties.dataSource(dataSource);
     }
 
+
+    /**
+     * 从库的bean仅当spring.datasource.druid.slave.enabled 为 true时，才会声明（依靠@ConditionalOnProperty和@Bean实现）。
+     * 2024/7/9
+     * @param druidProperties
+     * @return
+     */
     @Bean
     @ConfigurationProperties("spring.datasource.druid.slave")
     @ConditionalOnProperty(prefix = "spring.datasource.druid.slave", name = "enabled", havingValue = "true")

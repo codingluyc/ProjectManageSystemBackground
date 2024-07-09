@@ -27,6 +27,10 @@ public class DataSourceAspect
 {
     protected Logger logger = LoggerFactory.getLogger(getClass());
 
+    /**
+     * 定义切入点 为被com.ruoyi.common.annotation.DataSource注释的方法或类
+     * 2024/7/9
+     */
     @Pointcut("@annotation(com.ruoyi.common.annotation.DataSource)"
             + "|| @within(com.ruoyi.common.annotation.DataSource)")
     public void dsPointCut()
@@ -34,6 +38,13 @@ public class DataSourceAspect
 
     }
 
+    /**
+     *
+     * 2024/7/9
+     * @param point
+     * @return
+     * @throws Throwable
+     */
     @Around("dsPointCut()")
     public Object around(ProceedingJoinPoint point) throws Throwable
     {
