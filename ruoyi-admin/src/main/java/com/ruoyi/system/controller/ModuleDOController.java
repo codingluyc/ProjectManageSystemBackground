@@ -1,7 +1,10 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.vo.ModuleVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +47,17 @@ public class ModuleDOController extends BaseController
         startPage();
         List<ModuleDO> list = moduleDOService.selectModuleDOList(moduleDO);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询模块列表
+     */
+    @GetMapping("/allModule")
+    public AjaxResult allModule(ModuleDO moduleDO)
+    {
+        List<ModuleDO> list = moduleDOService.selectModuleDOList(moduleDO);
+        List<ModuleVO> allModule = list.stream().map(s->ModuleVO.fromModule(s)).collect(Collectors.toList());
+        return AjaxResult.success(allModule);
     }
 
     /**

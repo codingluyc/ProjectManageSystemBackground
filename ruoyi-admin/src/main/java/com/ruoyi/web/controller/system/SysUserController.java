@@ -3,6 +3,8 @@ package com.ruoyi.web.controller.system;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.web.vo.UserVO;
 import org.apache.commons.lang3.ArrayUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -63,6 +65,17 @@ public class SysUserController extends BaseController
         startPage();
         List<SysUser> list = userService.selectUserList(user);
         return getDataTable(list);
+    }
+
+    /**
+     * 获取用户列表
+     */
+    @GetMapping("/allUsers")
+    public AjaxResult allUsers(SysUser user)
+    {
+        List<SysUser> list = userService.selectUserList(user);
+        List<UserVO> userList = list.stream().map(s->UserVO.fromUser(s)).collect(Collectors.toList());
+        return AjaxResult.success(userList);
     }
 
     @Log(title = "用户管理", businessType = BusinessType.EXPORT)

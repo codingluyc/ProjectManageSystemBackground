@@ -1,7 +1,10 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.vo.ProjectVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +47,17 @@ public class ProjectDOController extends BaseController
         startPage();
         List<ProjectDO> list = projectDOService.selectProjectDOList(projectDO);
         return getDataTable(list);
+    }
+
+    /**
+     * 查询项目列表
+     */
+    @GetMapping("/allProject")
+    public AjaxResult allProject(ProjectDO projectDO)
+    {
+        List<ProjectDO> list = projectDOService.selectProjectDOList(projectDO);
+        List<ProjectVO> allProject = list.stream().map(s->ProjectVO.fromProject(s)).collect(Collectors.toList());
+        return AjaxResult.success(allProject);
     }
 
     /**

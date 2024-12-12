@@ -46,7 +46,19 @@ public class ProjectDO extends BaseEntity
     @Excel(name = "管理者id")
     private Long managerUserId;
 
-    public void setId(Long id) 
+    /** 管理者姓名 */
+    @Excel(name = "管理者姓名")
+    private String managerName;
+
+    public String getManagerName() {
+        return managerName;
+    }
+
+    public void setManagerName(String managerName) {
+        this.managerName = managerName;
+    }
+
+    public void setId(Long id)
     {
         this.id = id;
     }

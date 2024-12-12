@@ -1,5 +1,6 @@
 package com.ruoyi.system.domain;
 
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
@@ -11,6 +12,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-12-12
  */
+@Data
 public class ModuleDO extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -21,6 +23,10 @@ public class ModuleDO extends BaseEntity
     /** 项目id */
     @Excel(name = "项目id")
     private Long projectId;
+
+    /** 项目id */
+    @Excel(name = "项目名称")
+    private String projectName;
 
     /** 唯一编码 */
     @Excel(name = "唯一编码")
@@ -34,51 +40,7 @@ public class ModuleDO extends BaseEntity
     @Excel(name = "排序")
     private Long sort;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setProjectId(Long projectId) 
-    {
-        this.projectId = projectId;
-    }
-
-    public Long getProjectId() 
-    {
-        return projectId;
-    }
-    public void setCode(String code) 
-    {
-        this.code = code;
-    }
-
-    public String getCode() 
-    {
-        return code;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setSort(Long sort) 
-    {
-        this.sort = sort;
-    }
-
-    public Long getSort() 
-    {
-        return sort;
-    }
 
     @Override
     public String toString() {

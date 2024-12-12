@@ -20,7 +20,21 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectProjectDOVo">
-        select id, project_name, code, remark, start_date, end_date, sort, manager_user_id, create_time, update_time, create_by, update_by from project
+        select id,
+            project_name,
+            code,
+            p.remark,
+            start_date,
+            end_date,
+            sort,
+            manager_user_id,
+            p.create_time,
+            p.update_time,
+            p.create_by,
+            p.update_by,
+            u.nick_name as manager_name
+        from project p
+        left join sys_user u on p.manager_user_id = u.user_id
     </sql>
 
     <select id="selectProjectDOList" parameterType="ProjectDO" resultMap="ProjectDOResult">
@@ -32,7 +46,9 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDate != null "> and end_date = #{endDate}</if>
             <if test="sort != null "> and sort = #{sort}</if>
             <if test="managerUserId != null "> and manager_user_id = #{managerUserId}</if>
+            <if test="managerName != null and managerName != ''">and u.nick_name like concat('%',#{managerName},'%')</if>
         </where>
+        order by p.sort
     </select>
     
     <select id="selectProjectDOById" parameterType="Long" resultMap="ProjectDOResult">

@@ -16,15 +16,32 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectModuleDeveloperDOVo">
-        select id, module_id, dev_type, user_id, create_time, update_time, create_by, update_by from module_developer
+        select
+            md.id,
+            md.module_id,
+            md.dev_type,
+            md.user_id,
+            md.create_time,
+            md.update_time,
+            md.create_by,
+            md.update_by,
+            m.name as module_name,
+            m.project_id,
+            p.project_name,
+            u.nick_name as developer_name
+        from module_developer md
+            left join module m on md.module_id = m.id
+            left join project p on p.id = m.project_id
+            left join sys_user u on u.user_id = md.user_id
+
     </sql>
 
     <select id="selectModuleDeveloperDOList" parameterType="ModuleDeveloperDO" resultMap="ModuleDeveloperDOResult">
         <include refid="selectModuleDeveloperDOVo"/>
         <where>  
-            <if test="moduleId != null "> and module_id = #{moduleId}</if>
-            <if test="devType != null  and devType != ''"> and dev_type = #{devType}</if>
-            <if test="userId != null  and userId != ''"> and user_id = #{userId}</if>
+            <if test="moduleId != null "> and md.module_id = #{moduleId}</if>
+            <if test="devType != null  and devType != ''"> and md.dev_type = #{devType}</if>
+            <if test="userId != null  and userId != ''"> and md.user_id = #{userId}</if>
         </where>
     </select>
     
