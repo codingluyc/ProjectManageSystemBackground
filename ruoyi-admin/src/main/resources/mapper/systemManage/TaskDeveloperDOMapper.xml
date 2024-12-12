@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.mapper.TaskDeveloperDOMapper">
+    
+    <resultMap type="TaskDeveloperDO" id="TaskDeveloperDOResult">
+        <result property="id"    column="id"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="moduleId"    column="module_id"    />
+        <result property="taskId"    column="task_id"    />
+        <result property="developerId"    column="developer_id"    />
+        <result property="startDate"    column="start_date"    />
+        <result property="endDate"    column="end_date"    />
+        <result property="state"    column="state"    />
+    </resultMap>
+
+    <sql id="selectTaskDeveloperDOVo">
+        select id, create_time, update_time, create_by, update_by, project_id, module_id, task_id, developer_id, start_date, end_date, state from task_developer
+    </sql>
+
+    <select id="selectTaskDeveloperDOList" parameterType="TaskDeveloperDO" resultMap="TaskDeveloperDOResult">
+        <include refid="selectTaskDeveloperDOVo"/>
+        <where>  
+            <if test="projectId != null "> and project_id = #{projectId}</if>
+            <if test="moduleId != null "> and module_id = #{moduleId}</if>
+            <if test="taskId != null "> and task_id = #{taskId}</if>
+            <if test="developerId != null "> and developer_id = #{developerId}</if>
+            <if test="startDate != null "> and start_date = #{startDate}</if>
+            <if test="endDate != null "> and end_date = #{endDate}</if>
+            <if test="state != null  and state != ''"> and state = #{state}</if>
+        </where>
+    </select>
+    
+    <select id="selectTaskDeveloperDOById" parameterType="Long" resultMap="TaskDeveloperDOResult">
+        <include refid="selectTaskDeveloperDOVo"/>
+        where id = #{id}
+    </select>
+
+    <insert id="insertTaskDeveloperDO" parameterType="TaskDeveloperDO" useGeneratedKeys="true" keyProperty="id">
+        insert into task_developer
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="moduleId != null">module_id,</if>
+            <if test="taskId != null">task_id,</if>
+            <if test="developerId != null">developer_id,</if>
+            <if test="startDate != null">start_date,</if>
+            <if test="endDate != null">end_date,</if>
+            <if test="state != null">state,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="moduleId != null">#{moduleId},</if>
+            <if test="taskId != null">#{taskId},</if>
+            <if test="developerId != null">#{developerId},</if>
+            <if test="startDate != null">#{startDate},</if>
+            <if test="endDate != null">#{endDate},</if>
+            <if test="state != null">#{state},</if>
+         </trim>
+    </insert>
+
+    <update id="updateTaskDeveloperDO" parameterType="TaskDeveloperDO">
+        update task_developer
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="moduleId != null">module_id = #{moduleId},</if>
+            <if test="taskId != null">task_id = #{taskId},</if>
+            <if test="developerId != null">developer_id = #{developerId},</if>
+            <if test="startDate != null">start_date = #{startDate},</if>
+            <if test="endDate != null">end_date = #{endDate},</if>
+            <if test="state != null">state = #{state},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteTaskDeveloperDOById" parameterType="Long">
+        delete from task_developer where id = #{id}
+    </delete>
+
+    <delete id="deleteTaskDeveloperDOByIds" parameterType="String">
+        delete from task_developer where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
