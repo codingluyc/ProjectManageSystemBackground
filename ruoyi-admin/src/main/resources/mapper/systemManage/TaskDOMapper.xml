@@ -90,6 +90,37 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="state != null">#{state},</if>
          </trim>
     </insert>
+    <insert id="insertTaskDOByBatch">
+        insert into task
+            (create_time,
+            update_time,
+            create_by,
+            update_by,
+            project_id,
+            module_id,
+            name,
+            remark,
+            start_date,
+            end_date,
+            state)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (
+                #{item.createTime},
+                #{item.updateTime},
+                #{item.createBy},
+                #{item.updateBy},
+                #{item.projectId},
+                #{item.moduleId},
+                #{item.name},
+                #{item.remark},
+                #{item.startDate},
+                #{item.endDate},
+                #{item.state}
+            )
+        </foreach>
+
+    </insert>
 
     <update id="updateTaskDO" parameterType="TaskDO">
         update task

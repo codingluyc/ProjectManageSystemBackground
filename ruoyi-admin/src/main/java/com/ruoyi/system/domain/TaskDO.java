@@ -24,6 +24,9 @@ public class TaskDO extends BaseEntity
     /** $column.columnComment */
     private Long id;
 
+    //自动分工
+    private int auto;
+
     /** 项目id */
     @Excel(name = "项目id")
     private Long projectId;
@@ -31,6 +34,9 @@ public class TaskDO extends BaseEntity
     /** 模块id */
     @Excel(name = "模块id")
     private Long moduleId;
+
+    /** 模块id */
+    private Long[] moduleIds;
 
     /** 项目id */
     @Excel(name = "项目名称")

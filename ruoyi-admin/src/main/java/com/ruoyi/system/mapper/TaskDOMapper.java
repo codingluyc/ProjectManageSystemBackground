@@ -36,6 +36,14 @@ public interface TaskDOMapper
     public int insertTaskDO(TaskDO taskDO);
 
     /**
+     * 新增任务
+     *
+     * @param list 任务列表
+     * @return 结果
+     */
+    int insertTaskDOByBatch(List<TaskDO> list);
+
+    /**
      * 修改任务
      * 
      * @param taskDO 任务
