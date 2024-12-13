@@ -1,11 +1,14 @@
 package com.ruoyi.system.domain;
 
+import java.time.LocalDate;
 import java.util.Date;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.Data;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 任务对象 task
@@ -13,6 +16,7 @@ import com.ruoyi.common.core.domain.BaseEntity;
  * @author ruoyi
  * @date 2024-12-12
  */
+@Data
 public class TaskDO extends BaseEntity
 {
     private static final long serialVersionUID = 1L;
@@ -27,6 +31,14 @@ public class TaskDO extends BaseEntity
     /** 模块id */
     @Excel(name = "模块id")
     private Long moduleId;
+
+    /** 项目id */
+    @Excel(name = "项目名称")
+    private String projectName;
+
+    /** 模块id */
+    @Excel(name = "模块名称")
+    private String moduleName;
 
     /** 任务名称 */
     @Excel(name = "任务名称")
@@ -46,69 +58,13 @@ public class TaskDO extends BaseEntity
     @Excel(name = "1 未开始 2 进行中 3 已完成 4 已测试")
     private String state;
 
-    public void setId(Long id) 
-    {
-        this.id = id;
-    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDateBegin;
 
-    public Long getId() 
-    {
-        return id;
-    }
-    public void setProjectId(Long projectId) 
-    {
-        this.projectId = projectId;
-    }
-
-    public Long getProjectId() 
-    {
-        return projectId;
-    }
-    public void setModuleId(Long moduleId) 
-    {
-        this.moduleId = moduleId;
-    }
-
-    public Long getModuleId() 
-    {
-        return moduleId;
-    }
-    public void setName(String name) 
-    {
-        this.name = name;
-    }
-
-    public String getName() 
-    {
-        return name;
-    }
-    public void setStartDate(Date startDate) 
-    {
-        this.startDate = startDate;
-    }
-
-    public Date getStartDate() 
-    {
-        return startDate;
-    }
-    public void setEndDate(Date endDate) 
-    {
-        this.endDate = endDate;
-    }
-
-    public Date getEndDate() 
-    {
-        return endDate;
-    }
-    public void setState(String state) 
-    {
-        this.state = state;
-    }
-
-    public String getState() 
-    {
-        return state;
-    }
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private LocalDate endDateEnd;
 
     @Override
     public String toString() {

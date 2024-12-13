@@ -37,7 +37,7 @@ public class ModuleDeveloperDO extends BaseEntity
 
     /** 开发人员 */
     @Excel(name = "开发人员")
-    private String userId;
+    private Long userId;
     @Excel(name = "开发人员名称")
     private String developerName;
 

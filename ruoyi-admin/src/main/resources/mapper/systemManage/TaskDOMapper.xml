@@ -20,24 +20,44 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskDOVo">
-        select id, create_time, update_time, create_by, update_by, project_id, module_id, name, remark, start_date, end_date, state from task
+        select
+            t.id,
+            t.create_time,
+            t.update_time,
+            t.create_by,
+            t.update_by,
+            t.project_id,
+            t.module_id,
+            t.name,
+            t.remark,
+            t.start_date,
+            t.end_date,
+            t.state,
+            m.name as module_name,
+            p.project_name
+        from task t
+            left join module m on t.module_id = m.id
+            left join project p on t.project_id = p.id
+
     </sql>
 
     <select id="selectTaskDOList" parameterType="TaskDO" resultMap="TaskDOResult">
         <include refid="selectTaskDOVo"/>
         <where>  
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="moduleId != null "> and module_id = #{moduleId}</if>
-            <if test="name != null  and name != ''"> and name like concat('%', #{name}, '%')</if>
-            <if test="startDate != null "> and start_date = #{startDate}</if>
-            <if test="endDate != null "> and end_date = #{endDate}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="projectId != null "> and t.project_id = #{projectId}</if>
+            <if test="moduleId != null "> and t.module_id = #{moduleId}</if>
+            <if test="name != null  and name != ''"> and t.name like concat('%', #{name}, '%')</if>
+            <if test="startDate != null "> and t.start_date = #{startDate}</if>
+            <if test="endDate != null "> and t.end_date = #{endDate}</if>
+            <if test="state != null  and state != ''"> and t.state = #{state}</if>
+            <if test="endDateBegin != null "> and t.end_date >= #{endDateBegin}</if>
+            <if test="endDateEnd != null "> and t.end_date &lt;= #{endDateEnd}</if>
         </where>
     </select>
     
     <select id="selectTaskDOById" parameterType="Long" resultMap="TaskDOResult">
         <include refid="selectTaskDOVo"/>
-        where id = #{id}
+        where t.id = #{id}
     </select>
 
     <insert id="insertTaskDO" parameterType="TaskDO" useGeneratedKeys="true" keyProperty="id">

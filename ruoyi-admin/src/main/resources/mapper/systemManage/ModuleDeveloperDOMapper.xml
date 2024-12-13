@@ -42,12 +42,14 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="moduleId != null "> and md.module_id = #{moduleId}</if>
             <if test="devType != null  and devType != ''"> and md.dev_type = #{devType}</if>
             <if test="userId != null  and userId != ''"> and md.user_id = #{userId}</if>
+            <if test="projectId != null and projectId != ''">and m.project_id = #{projectId}</if>
+            <if test="developerName != null and developerName != ''">and u.nick_name like concat('%',#{developerName},'%')</if>
         </where>
     </select>
     
     <select id="selectModuleDeveloperDOById" parameterType="Long" resultMap="ModuleDeveloperDOResult">
         <include refid="selectModuleDeveloperDOVo"/>
-        where id = #{id}
+        where md.id = #{id}
     </select>
 
     <insert id="insertModuleDeveloperDO" parameterType="ModuleDeveloperDO" useGeneratedKeys="true" keyProperty="id">
