@@ -1,7 +1,10 @@
 package com.ruoyi.system.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.servlet.http.HttpServletResponse;
+
+import com.ruoyi.system.vo.TaskVO;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -33,6 +36,17 @@ public class TaskDOController extends BaseController
 {
     @Autowired
     private ITaskDOService taskDOService;
+
+    /**
+     * 查询任务列表
+     */
+    @GetMapping("/allTask")
+    public AjaxResult allTask(TaskDO taskDO)
+    {
+        List<TaskDO> list = taskDOService.selectTaskDOList(taskDO);
+        List<TaskVO> allTasks = list.stream().map(s->TaskVO.fromTask(s)).collect(Collectors.toList());
+        return AjaxResult.success(allTasks);
+    }
 
     /**
      * 查询任务列表

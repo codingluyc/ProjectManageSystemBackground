@@ -20,25 +20,46 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     </resultMap>
 
     <sql id="selectTaskDeveloperDOVo">
-        select id, create_time, update_time, create_by, update_by, project_id, module_id, task_id, developer_id, start_date, end_date, state from task_developer
+        select
+            td.id,
+            td.create_time,
+            td.update_time,
+            td.create_by,
+            td.update_by,
+            td.project_id,
+            td.module_id,
+            td.task_id,
+            td.developer_id,
+            td.start_date,
+            td.end_date,
+            td.state,
+            t.name as task_name,
+            m.name as module_name,
+            p.project_name,
+            u.nick_name as developer_name
+        from task_developer td
+            left join task t on t.id = td.task_id
+            left join module m on m.id = td.module_id
+            left join project p on p.id = td.project_id
+            left join sys_user u on u.user_id = td.developer_id
     </sql>
 
     <select id="selectTaskDeveloperDOList" parameterType="TaskDeveloperDO" resultMap="TaskDeveloperDOResult">
         <include refid="selectTaskDeveloperDOVo"/>
         <where>  
-            <if test="projectId != null "> and project_id = #{projectId}</if>
-            <if test="moduleId != null "> and module_id = #{moduleId}</if>
-            <if test="taskId != null "> and task_id = #{taskId}</if>
-            <if test="developerId != null "> and developer_id = #{developerId}</if>
-            <if test="startDate != null "> and start_date = #{startDate}</if>
-            <if test="endDate != null "> and end_date = #{endDate}</if>
-            <if test="state != null  and state != ''"> and state = #{state}</if>
+            <if test="projectId != null "> and td.project_id = #{projectId}</if>
+            <if test="moduleId != null "> and td.module_id = #{moduleId}</if>
+            <if test="taskId != null "> and td.task_id = #{taskId}</if>
+            <if test="developerId != null "> and td.developer_id = #{developerId}</if>
+            <if test="startDate != null "> and td.start_date = #{startDate}</if>
+            <if test="endDate != null "> and td.end_date = #{endDate}</if>
+            <if test="state != null  and state != ''"> and td.state = #{state}</if>
         </where>
     </select>
     
     <select id="selectTaskDeveloperDOById" parameterType="Long" resultMap="TaskDeveloperDOResult">
         <include refid="selectTaskDeveloperDOVo"/>
-        where id = #{id}
+        where td.id = #{id}
     </select>
 
     <insert id="insertTaskDeveloperDO" parameterType="TaskDeveloperDO" useGeneratedKeys="true" keyProperty="id">

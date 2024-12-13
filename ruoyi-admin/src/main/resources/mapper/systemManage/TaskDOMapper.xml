@@ -53,6 +53,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="endDateBegin != null "> and t.end_date >= #{endDateBegin}</if>
             <if test="endDateEnd != null "> and t.end_date &lt;= #{endDateEnd}</if>
         </where>
+        order by id desc
     </select>
     
     <select id="selectTaskDOById" parameterType="Long" resultMap="TaskDOResult">
