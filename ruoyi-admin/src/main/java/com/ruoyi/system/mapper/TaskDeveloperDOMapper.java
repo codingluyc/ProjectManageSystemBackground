@@ -36,6 +36,13 @@ public interface TaskDeveloperDOMapper
     public int insertTaskDeveloperDO(TaskDeveloperDO taskDeveloperDO);
 
     /**
+     * 批量插入分工
+     * @param tdList
+     * @return
+     */
+    int insertTaskDeveloperDOByBatch(List<TaskDeveloperDO> tdList);
+
+    /**
      * 修改任务-开发者
      * 
      * @param taskDeveloperDO 任务-开发者

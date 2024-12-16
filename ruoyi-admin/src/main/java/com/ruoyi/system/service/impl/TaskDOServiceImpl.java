@@ -1,8 +1,13 @@
 package com.ruoyi.system.service.impl;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import com.ruoyi.common.utils.DateUtils;
+import com.ruoyi.system.domain.ModuleDeveloperDO;
+import com.ruoyi.system.domain.TaskDeveloperDO;
+import com.ruoyi.system.mapper.ModuleDeveloperDOMapper;
+import com.ruoyi.system.mapper.TaskDeveloperDOMapper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +15,8 @@ import com.ruoyi.system.mapper.TaskDOMapper;
 import com.ruoyi.system.domain.TaskDO;
 import com.ruoyi.system.service.ITaskDOService;
 import org.springframework.transaction.annotation.Transactional;
+
+import javax.annotation.Resource;
 
 /**
  * 任务Service业务层处理
@@ -22,6 +29,11 @@ public class TaskDOServiceImpl implements ITaskDOService
 {
     @Autowired
     private TaskDOMapper taskDOMapper;
+
+    @Resource
+    TaskDeveloperDOMapper taskDeveloperDOMapper;
+    @Resource
+    ModuleDeveloperDOMapper moduleDeveloperDOMapper;
 
     /**
      * 查询任务
@@ -57,12 +69,17 @@ public class TaskDOServiceImpl implements ITaskDOService
     @Transactional
     public int insertTaskDO(TaskDO taskDO)
     {
+        int result;
         taskDO.setCreateTime(DateUtils.getNowDate());
         if(taskDO.getModuleIds() == null || taskDO.getModuleIds().length < 2){
             if( taskDO.getModuleIds().length < 2 && taskDO.getModuleIds().length > 0){
                 taskDO.setModuleId(taskDO.getModuleIds()[0]);
             }
-            return taskDOMapper.insertTaskDO(taskDO);
+            result = taskDOMapper.insertTaskDO(taskDO);
+            if(taskDO.getAuto() == 1){
+                // 自动任务
+                division(taskDO);
+            }
         }else{
             List<TaskDO> taskList = new ArrayList<>(taskDO.getModuleIds().length);
             for(Long moduleId : taskDO.getModuleIds()){
@@ -71,7 +88,53 @@ public class TaskDOServiceImpl implements ITaskDOService
                 d.setModuleId(moduleId);
                 taskList.add(d);
             }
-            return taskDOMapper.insertTaskDOByBatch(taskList);
+            result = taskDOMapper.insertTaskDOByBatch(taskList);
+            if(taskDO.getAuto() == 1){
+                // 自动任务
+                division(taskList);
+            }
+        }
+
+
+        return result;
+    }
+
+
+    /**
+     * 将任务根据模块职责进行分工
+     * @param taskDO
+     */
+    private void division(TaskDO taskDO){
+        ModuleDeveloperDO md = new ModuleDeveloperDO();
+        md.setModuleId(taskDO.getModuleId());
+        if(taskDO.getDuties() != null && taskDO.getDuties().length > 0){
+            md.setDevTypeList(Arrays.asList(taskDO.getDuties()));
+        }
+        List<ModuleDeveloperDO> devs = moduleDeveloperDOMapper.selectModuleDeveloperDOList(md);
+        if(devs != null && devs.size() > 0){
+            List<TaskDeveloperDO> tdList = new ArrayList<>();
+            for(ModuleDeveloperDO d : devs){
+                TaskDeveloperDO td = new TaskDeveloperDO();
+                td.setProjectId(taskDO.getProjectId());
+                td.setModuleId(taskDO.getModuleId());
+                td.setTaskId(taskDO.getId());
+                td.setDeveloperId(d.getUserId());
+                td.setStartDate(taskDO.getStartDate());
+                td.setEndDate(taskDO.getEndDate());
+                td.setState(taskDO.getState());
+                tdList.add(td);
+            }
+            taskDeveloperDOMapper.insertTaskDeveloperDOByBatch(tdList);
+        }
+    }
+
+    /**
+     * 批量任务自动分工
+     * @param taskList
+     */
+    private void division(List<TaskDO> taskList){
+        for(TaskDO taskDO:taskList){
+            division(taskDO);
         }
     }
 

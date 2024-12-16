@@ -44,6 +44,12 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="userId != null  and userId != ''"> and md.user_id = #{userId}</if>
             <if test="projectId != null and projectId != ''">and m.project_id = #{projectId}</if>
             <if test="developerName != null and developerName != ''">and u.nick_name like concat('%',#{developerName},'%')</if>
+            <if test="devTypeList != null and devTypeList.size() != 0">
+                and md.dev_type in
+                <foreach item="devType" collection="devTypeList" open="(" separator="," close=")">
+                    #{devType}
+                </foreach>
+            </if>
         </where>
     </select>
     

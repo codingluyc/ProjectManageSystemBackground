@@ -91,6 +91,36 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
             <if test="state != null">#{state},</if>
          </trim>
     </insert>
+    <insert id="insertTaskDeveloperDOByBatch">
+        insert into task_developer(
+            create_time,
+            update_time,
+            create_by,
+            update_by,
+            project_id,
+            module_id,
+            task_id,
+            developer_id,
+            start_date,
+            end_date,
+            state
+        )values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (
+                #{item.createTime},
+                #{item.updateTime},
+                #{item.createBy},
+                #{item.updateBy},
+                #{item.projectId},
+                #{item.moduleId},
+                #{item.taskId},
+                #{item.developerId},
+                #{item.startDate},
+                #{item.endDate},
+                #{item.state}
+            )
+        </foreach>
+    </insert>
 
     <update id="updateTaskDeveloperDO" parameterType="TaskDeveloperDO">
         update task_developer

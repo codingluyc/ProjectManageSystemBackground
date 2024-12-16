@@ -6,6 +6,8 @@ import org.apache.commons.lang3.builder.ToStringStyle;
 import com.ruoyi.common.annotation.Excel;
 import com.ruoyi.common.core.domain.BaseEntity;
 
+import java.util.List;
+
 /**
  * 模块开发者对象 module_developer
  * 
@@ -34,6 +36,11 @@ public class ModuleDeveloperDO extends BaseEntity
     /** 1前端 2后端 */
     @Excel(name = "1前端 2后端")
     private String devType;
+
+    /**
+     * 职责列表
+     */
+    private List<String> devTypeList;
 
     /** 开发人员 */
     @Excel(name = "开发人员")

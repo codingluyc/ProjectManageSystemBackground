@@ -38,6 +38,11 @@ public class TaskDO extends BaseEntity
     /** 模块id */
     private Long[] moduleIds;
 
+    /**
+     * 职责
+     */
+    private String[] duties;
+
     /** 项目id */
     @Excel(name = "项目名称")
     private String projectName;
