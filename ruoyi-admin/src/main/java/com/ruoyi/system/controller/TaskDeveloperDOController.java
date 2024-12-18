@@ -47,6 +47,17 @@ public class TaskDeveloperDOController extends BaseController
     }
 
     /**
+     * 查询任务-开发者列表
+     */
+
+    @GetMapping("/allList")
+    public AjaxResult allList(TaskDeveloperDO taskDeveloperDO)
+    {
+        List<TaskDeveloperDO> list = taskDeveloperDOService.selectTaskDeveloperDOList(taskDeveloperDO);
+        return AjaxResult.success(list);
+    }
+
+    /**
      * 导出任务-开发者列表
      */
     @PreAuthorize("@ss.hasPermi('systemManage:taskDeveloper:export')")
