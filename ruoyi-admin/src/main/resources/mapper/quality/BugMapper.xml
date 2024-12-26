@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.quality.mapper.BugMapper">
+    
+    <resultMap type="Bug" id="BugResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="title"    column="title"    />
+        <result property="description"    column="description"    />
+        <result property="status"    column="status"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="moduleId"    column="module_id"    />
+        <result property="version"    column="version"    />
+        <result property="proposerId"    column="proposer_id"    />
+        <result property="source"    column="source"    />
+        <result property="priority"    column="priority"    />
+        <result property="severity"    column="severity"    />
+        <result property="customized"    column="customized"    />
+        <result property="solution"    column="solution"    />
+        <result property="reason"    column="reason"    />
+        <result property="discoverTime"    column="discover_time"    />
+        <result property="assignTime"    column="assign_time"    />
+        <result property="confirmTime"    column="confirm_time"    />
+        <result property="actualTime"    column="actual_time"    />
+    </resultMap>
+
+    <sql id="selectBugVo">
+        select
+            b.id,
+            b.create_by,
+            b.update_by,
+            b.create_time,
+            b.update_time,
+            b.title,
+            b.description,
+            b.status,
+            b.project_id,
+            p.project_name,
+            b.solver_id,
+            s.nick_name as solver_name,
+            b.module_id,
+            m.name as module_name,
+            b.version,
+            b.proposer_id,
+            u.nick_name as proposer_name,
+            b.source,
+            b.priority,
+            b.severity,
+            b.customized,
+            b.solution,
+            b.reason,
+            b.discover_time,
+            b.assign_time,
+            b.confirm_time,
+            b.actual_time
+        from bug b
+            left join sys_user u on b.proposer_id = u.user_id
+            left join sys_user s on b.solver_id = s.user_id
+            left join module m on b.module_id = m.id
+            left join project p on p.id = b.project_id
+
+    </sql>
+
+    <select id="selectBugList" parameterType="Bug" resultMap="BugResult">
+        <include refid="selectBugVo"/>
+        <where>  
+            <if test="title != null  and title != ''"> and b.title = #{title}</if>
+            <if test="status != null "> and b.status = #{status}</if>
+            <if test="projectId != null "> and b.project_id = #{projectId}</if>
+            <if test="moduleId != null "> and b.module_id = #{moduleId}</if>
+            <if test="version != null  and version != ''"> and b.version = #{version}</if>
+            <if test="proposerId != null "> and b.proposer_id = #{proposerId}</if>
+            <if test="solverId != null "> and b.solver_id = #{solverId}</if>
+            <if test="proposerName != null and proposerName != ''"> and u.proposer_name like concat('%',#{proposerName},'%')</if>
+            <if test="solverName != null and solverName != ''"> and s.solver_name like concat('%',#{solverName},'%')</if>
+            <if test="source != null "> and b.source = #{source}</if>
+            <if test="priority != null "> and b.priority = #{priority}</if>
+            <if test="severity != null "> and b.severity = #{severity}</if>
+            <if test="customized != null "> and b.customized = #{customized}</if>
+            <if test="params.beginDiscoverTime != null and params.beginDiscoverTime != '' and params.endDiscoverTime != null and params.endDiscoverTime != ''"> and b.discover_time between #{params.beginDiscoverTime} and #{params.endDiscoverTime}</if>
+            <if test="params.beginAssignTime != null and params.beginAssignTime != '' and params.endAssignTime != null and params.endAssignTime != ''"> and b.assign_time between #{params.beginAssignTime} and #{params.endAssignTime}</if>
+            <if test="confirmTime != null "> and b.confirm_time = #{confirmTime}</if>
+            <if test="actualTime != null "> and b.actual_time = #{actualTime}</if>
+        </where>
+    </select>
+    
+    <select id="selectBugById" parameterType="Long" resultMap="BugResult">
+        <include refid="selectBugVo"/>
+        where b.id = #{id}
+    </select>
+
+    <insert id="insertBug" parameterType="Bug" useGeneratedKeys="true" keyProperty="id">
+        insert into bug
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="title != null">title,</if>
+            <if test="description != null">description,</if>
+            <if test="status != null">status,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="moduleId != null">module_id,</if>
+            <if test="version != null">version,</if>
+            <if test="proposerId != null">proposer_id,</if>
+            <if test="solverId != null">solver_id,</if>
+            <if test="source != null">source,</if>
+            <if test="priority != null">priority,</if>
+            <if test="severity != null">severity,</if>
+            <if test="customized != null">customized,</if>
+            <if test="solution != null">solution,</if>
+            <if test="reason != null">reason,</if>
+            <if test="discoverTime != null">discover_time,</if>
+            <if test="assignTime != null">assign_time,</if>
+            <if test="confirmTime != null">confirm_time,</if>
+            <if test="actualTime != null">actual_time,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="title != null">#{title},</if>
+            <if test="description != null">#{description},</if>
+            <if test="status != null">#{status},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="moduleId != null">#{moduleId},</if>
+            <if test="version != null">#{version},</if>
+            <if test="proposerId != null">#{proposerId},</if>
+            <if test="solverId != null">#{solverId},</if>
+            <if test="source != null">#{source},</if>
+            <if test="priority != null">#{priority},</if>
+            <if test="severity != null">#{severity},</if>
+            <if test="customized != null">#{customized},</if>
+            <if test="solution != null">#{solution},</if>
+            <if test="reason != null">#{reason},</if>
+            <if test="discoverTime != null">#{discoverTime},</if>
+            <if test="assignTime != null">#{assignTime},</if>
+            <if test="confirmTime != null">#{confirmTime},</if>
+            <if test="actualTime != null">#{actualTime},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBug" parameterType="Bug">
+        update bug
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="title != null">title = #{title},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="status != null">status = #{status},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="moduleId != null">module_id = #{moduleId},</if>
+            <if test="version != null">version = #{version},</if>
+            <if test="proposerId != null">proposer_id = #{proposerId},</if>
+            <if test="solverId != null">solver_id = #{solverId},</if>
+            <if test="source != null">source = #{source},</if>
+            <if test="priority != null">priority = #{priority},</if>
+            <if test="severity != null">severity = #{severity},</if>
+            <if test="customized != null">customized = #{customized},</if>
+            <if test="solution != null">solution = #{solution},</if>
+            <if test="reason != null">reason = #{reason},</if>
+            <if test="discoverTime != null">discover_time = #{discoverTime},</if>
+            <if test="assignTime != null">assign_time = #{assignTime},</if>
+            <if test="confirmTime != null">confirm_time = #{confirmTime},</if>
+            <if test="actualTime != null">actual_time = #{actualTime},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBugById" parameterType="Long">
+        delete from bug where id = #{id}
+    </delete>
+
+    <delete id="deleteBugByIds" parameterType="String">
+        delete from bug where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

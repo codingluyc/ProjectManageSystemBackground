@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.system.scheduling.mapper.ProjectTeamMapper">
+    
+    <resultMap type="ProjectTeam" id="ProjectTeamResult">
+        <result property="id"    column="id"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="projectId"    column="project_id"    />
+        <result property="userId"    column="user_id"    />
+    </resultMap>
+
+    <sql id="selectProjectTeamVo">
+        select
+            pt.id,
+            pt.create_by,
+            pt.update_by,
+            pt.create_time,
+            pt.update_time,
+            pt.project_id,
+            p.project_name,
+            pt.user_id,
+            u.nick_name as user_name
+        from project_team pt
+            left join project p on pt.project_id = p.id
+            left join sys_user u on pt.user_id = u.user_id
+    </sql>
+
+    <select id="selectProjectTeamList" parameterType="ProjectTeam" resultMap="ProjectTeamResult">
+        <include refid="selectProjectTeamVo"/>
+        <where>  
+            <if test="projectId != null "> and pt.project_id = #{projectId}</if>
+            <if test="userId != null "> and pt.user_id = #{userId}</if>
+        </where>
+    </select>
+    
+    <select id="selectProjectTeamById" parameterType="Long" resultMap="ProjectTeamResult">
+        <include refid="selectProjectTeamVo"/>
+        where id = #{id}
+    </select>
+    <select id="userNotInProject" resultType="com.ruoyi.system.scheduling.vo.TeamMemberVO">
+        select u.user_id ,u.nick_name as user_name
+        from sys_user u
+        where not exists(
+            select * from project_team pt where pt.user_id = u.user_id and pt.project_id = #{projectId}
+        )
+    </select>
+
+    <insert id="insertProjectTeam" parameterType="ProjectTeam" useGeneratedKeys="true" keyProperty="id">
+        insert into project_team
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">create_by,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="projectId != null">project_id,</if>
+            <if test="userId != null">user_id,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="projectId != null">#{projectId},</if>
+            <if test="userId != null">#{userId},</if>
+         </trim>
+    </insert>
+    <insert id="insertProjectTeamByBatch">
+        insert ignore into project_team(project_id,user_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+            (#{item.projectId},#{item.userId})
+        </foreach>
+
+    </insert>
+
+    <update id="updateProjectTeam" parameterType="ProjectTeam">
+        update project_team
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="projectId != null">project_id = #{projectId},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjectTeamById" parameterType="Long">
+        delete from project_team where id = #{id}
+    </delete>
+
+    <delete id="deleteProjectTeamByIds" parameterType="String">
+        delete from project_team where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
